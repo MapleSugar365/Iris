@@ -21,19 +21,21 @@ import java.util.Optional;
 import java.util.Properties;
 
 /**
- * A class dedicated to storing the config values of shaderpacks. Right now it only stores the path to the current shaderpack
+ * A class dedicated to storing the config values of shaderpacks. Right now it
+ * only stores the path to the current shaderpack
  */
 public class IrisConfig {
-	private static final String COMMENT =
-		"This file stores configuration options for Iris, such as the currently active shaderpack";
+	private static final String COMMENT = "This file stores configuration options for Iris, such as the currently active shaderpack";
 	private final Path propertiesPath;
 	private final Path excludedPath;
 	/**
-	 * The path to the current shaderpack. Null if the internal shaderpack is being used.
+	 * The path to the current shaderpack. Null if the internal shaderpack is being
+	 * used.
 	 */
 	private String shaderPackName;
 	/**
-	 * Whether or not shaders are used for rendering. False to disable all shader-based rendering, true to enable it.
+	 * Whether or not shaders are used for rendering. False to disable all
+	 * shader-based rendering, true to enable it.
 	 */
 	private boolean enableShaders;
 	/**
@@ -41,7 +43,8 @@ public class IrisConfig {
 	 */
 	private boolean allowUnknownShaders;
 	/**
-	 * If debug features should be enabled. Gives much more detailed OpenGL error outputs at the cost of performance.
+	 * If debug features should be enabled. Gives much more detailed OpenGL error
+	 * outputs at the cost of performance.
 	 */
 	private boolean enableDebugOptions;
 	/**
@@ -64,7 +67,8 @@ public class IrisConfig {
 	}
 
 	/**
-	 * Initializes the configuration, loading it if it is present and creating a default config otherwise.
+	 * Initializes the configuration, loading it if it is present and creating a
+	 * default config otherwise.
 	 *
 	 * @throws IOException file exceptions
 	 */
@@ -87,7 +91,8 @@ public class IrisConfig {
 	/**
 	 * Returns the name of the current shaderpack
 	 *
-	 * @return Returns the current shaderpack name - if internal shaders are being used it returns "(internal)"
+	 * @return Returns the current shaderpack name - if internal shaders are being
+	 *         used it returns "(internal)"
 	 */
 	public Optional<String> getShaderPackName() {
 		return Optional.ofNullable(shaderPackName);
@@ -107,10 +112,17 @@ public class IrisConfig {
 	/**
 	 * Determines whether or not shaders are used for rendering.
 	 *
-	 * @return False to disable all shader-based rendering, true to enable shader-based rendering.
+	 * @return False to disable all shader-based rendering, true to enable
+	 *         shader-based rendering.
 	 */
 	public boolean areShadersEnabled() {
 		return enableShaders;
+	}
+
+	public boolean areShadersEnabled(Boolean inWorld) {
+		if (inWorld)
+			return enableShaders;
+		return false;
 	}
 
 	public boolean areDebugOptionsEnabled() {
@@ -135,14 +147,16 @@ public class IrisConfig {
 	private static Gson GSON = new Gson();
 
 	/**
-	 * loads the config file and then populates the string, int, and boolean entries with the parsed entries
+	 * loads the config file and then populates the string, int, and boolean entries
+	 * with the parsed entries
 	 *
 	 * @throws IOException if the file cannot be loaded
 	 */
 
 	public void load() throws IOException {
 		if (Files.exists(excludedPath)) {
-			JsonArray json = JsonParser.parseString(Files.readString(excludedPath)).getAsJsonObject().getAsJsonArray("excluded");
+			JsonArray json = JsonParser.parseString(Files.readString(excludedPath)).getAsJsonObject()
+					.getAsJsonArray("excluded");
 			for (int i = 0; i < json.size(); i++) {
 				ResourceLocation resource = ResourceLocation.tryParse(json.get(i).getAsString());
 				if (resource == null) {
@@ -175,7 +189,8 @@ public class IrisConfig {
 		enableDebugOptions = "true".equals(properties.getProperty("enableDebugOptions"));
 		disableUpdateMessage = "true".equals(properties.getProperty("disableUpdateMessage"));
 		try {
-			IrisVideoSettings.shadowDistance = Integer.parseInt(properties.getProperty("maxShadowRenderDistance", "32"));
+			IrisVideoSettings.shadowDistance = Integer
+					.parseInt(properties.getProperty("maxShadowRenderDistance", "32"));
 			IrisVideoSettings.colorSpace = ColorSpace.valueOf(properties.getProperty("colorSpace", "SRGB"));
 		} catch (IllegalArgumentException e) {
 			Iris.logger.error("Shadow distance setting reset; value is invalid.");
@@ -192,7 +207,8 @@ public class IrisConfig {
 	}
 
 	/**
-	 * Serializes the config into a file. Should be called whenever any config values are modified.
+	 * Serializes the config into a file. Should be called whenever any config
+	 * values are modified.
 	 *
 	 * @throws IOException file exceptions
 	 */

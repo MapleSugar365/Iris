@@ -43,6 +43,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
+
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 
@@ -94,7 +95,8 @@ public class Iris {
 	private static KeyMapping wireframeKeybind;
 	// Flag variable used when reloading
 	// Used in favor of queueDefaultShaderPackOptionValues() for resetting as the
-	// behavior is more concrete and therefore is more likely to repair a user's issues
+	// behavior is more concrete and therefore is more likely to repair a user's
+	// issues
 	private static boolean resetShaderPackOptions = false;
 	private static String IRIS_VERSION;
 	private static UpdateChecker updateChecker;
@@ -102,26 +104,32 @@ public class Iris {
 	private static boolean loadShaderPackWhenPossible;
 
 	static {
-		if (!BuildConfig.ACTIVATE_RENDERDOC && IrisPlatformHelpers.getInstance().isDevelopmentEnvironment() && System.getProperty("user.name").contains("ims") && Util.getPlatform() == Util.OS.LINUX) {
+		if (!BuildConfig.ACTIVATE_RENDERDOC && IrisPlatformHelpers.getInstance().isDevelopmentEnvironment()
+				&& System.getProperty("user.name").contains("ims") && Util.getPlatform() == Util.OS.LINUX) {
 		}
 	}
 
 	/**
-	 * Called once RenderSystem#initRenderer has completed. This means that we can safely access OpenGL.
+	 * Called once RenderSystem#initRenderer has completed. This means that we can
+	 * safely access OpenGL.
 	 */
 	public static void onRenderSystemInit() {
 		if (!initialized) {
 			Iris.logger.warn("Iris::onRenderSystemInit was called, but Iris::onEarlyInitialize was not called." +
-				" Trying to avoid a crash but this is an odd state.");
+					" Trying to avoid a crash but this is an odd state.");
 			return;
 		}
 
 		PBRTextureManager.INSTANCE.init();
 
-		VertexSerializerRegistry.instance().registerSerializer(DefaultVertexFormat.NEW_ENTITY, IrisVertexFormats.TERRAIN, new EntityToTerrainVertexSerializer());
-		VertexSerializerRegistry.instance().registerSerializer(IrisVertexFormats.ENTITY, IrisVertexFormats.TERRAIN, new IrisEntityToTerrainVertexSerializer());
-		VertexSerializerRegistry.instance().registerSerializer(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP, IrisVertexFormats.GLYPH, new GlyphExtVertexSerializer());
-		VertexSerializerRegistry.instance().registerSerializer(DefaultVertexFormat.NEW_ENTITY, IrisVertexFormats.ENTITY, new ModelToEntityVertexSerializer());
+		VertexSerializerRegistry.instance().registerSerializer(DefaultVertexFormat.NEW_ENTITY,
+				IrisVertexFormats.TERRAIN, new EntityToTerrainVertexSerializer());
+		VertexSerializerRegistry.instance().registerSerializer(IrisVertexFormats.ENTITY, IrisVertexFormats.TERRAIN,
+				new IrisEntityToTerrainVertexSerializer());
+		VertexSerializerRegistry.instance().registerSerializer(DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+				IrisVertexFormats.GLYPH, new GlyphExtVertexSerializer());
+		VertexSerializerRegistry.instance().registerSerializer(DefaultVertexFormat.NEW_ENTITY, IrisVertexFormats.ENTITY,
+				new ModelToEntityVertexSerializer());
 
 		// Only load the shader pack when we can access OpenGL
 		if (!IrisPlatformHelpers.getInstance().isModLoaded("distanthorizons")) {
@@ -139,11 +147,12 @@ public class Iris {
 	public static void onLoadingComplete() {
 		if (!initialized) {
 			Iris.logger.warn("Iris::onLoadingComplete was called, but Iris::onEarlyInitialize was not called." +
-				" Trying to avoid a crash but this is an odd state.");
+					" Trying to avoid a crash but this is an odd state.");
 			return;
 		}
 
-		// Initialize the pipeline now so that we don't increase world loading time. Just going to guess that
+		// Initialize the pipeline now so that we don't increase world loading time.
+		// Just going to guess that
 		// the player is in the overworld.
 		// See: https://github.com/IrisShaders/Iris/issues/323
 		lastDimension = DimensionId.OVERWORLD;
@@ -168,7 +177,9 @@ public class Iris {
 				logger.error("Error while reloading Shaders for Iris!", e);
 
 				if (minecraft.player != null) {
-					minecraft.player.displayClientMessage(Component.translatable("iris.shaders.reloaded.failure", Throwables.getRootCause(e).getMessage()).withStyle(ChatFormatting.RED), false);
+					minecraft.player.displayClientMessage(Component
+							.translatable("iris.shaders.reloaded.failure", Throwables.getRootCause(e).getMessage())
+							.withStyle(ChatFormatting.RED), false);
 				}
 			}
 		} else if (toggleShadersKeybind.consumeClick()) {
@@ -178,7 +189,9 @@ public class Iris {
 				logger.error("Error while toggling shaders!", e);
 
 				if (minecraft.player != null) {
-					minecraft.player.displayClientMessage(Component.translatable("iris.shaders.toggled.failure", Throwables.getRootCause(e).getMessage()).withStyle(ChatFormatting.RED), false);
+					minecraft.player.displayClientMessage(Component
+							.translatable("iris.shaders.toggled.failure", Throwables.getRootCause(e).getMessage())
+							.withStyle(ChatFormatting.RED), false);
 				}
 				setShadersDisabled();
 				fallback = true;
@@ -186,8 +199,10 @@ public class Iris {
 		} else if (shaderpackScreenKeybind.consumeClick()) {
 			minecraft.setScreen(new ShaderPackScreen(null));
 		} else if (wireframeKeybind.consumeClick()) {
-			if (irisConfig.areDebugOptionsEnabled() && minecraft.player != null && !Minecraft.getInstance().isLocalServer()) {
-				minecraft.player.displayClientMessage(Component.literal("No cheating; wireframe only in singleplayer!"), false);
+			if (irisConfig.areDebugOptionsEnabled() && minecraft.player != null
+					&& !Minecraft.getInstance().isLocalServer()) {
+				minecraft.player.displayClientMessage(Component.literal("No cheating; wireframe only in singleplayer!"),
+						false);
 			}
 		}
 	}
@@ -202,7 +217,9 @@ public class Iris {
 
 		reload();
 		if (minecraft.player != null) {
-			minecraft.player.displayClientMessage(enabled ? Component.translatable("iris.shaders.toggled", currentPackName) : Component.translatable("iris.shaders.disabled"), false);
+			minecraft.player
+					.displayClientMessage(enabled ? Component.translatable("iris.shaders.toggled", currentPackName)
+							: Component.translatable("iris.shaders.disabled"), false);
 		}
 	}
 
@@ -210,20 +227,19 @@ public class Iris {
 		if (irisConfig == null) {
 			if (!initialized) {
 				throw new IllegalStateException("Iris::loadShaderpack was called, but Iris::onInitializeClient wasn't" +
-					" called yet. How did this happen?");
+						" called yet. How did this happen?");
 			} else {
 				throw new NullPointerException("Iris.irisConfig was null unexpectedly");
 			}
 		}
-
-		if (!irisConfig.areShadersEnabled()) {
+		Boolean inWorld = Minecraft.getInstance().level != null;
+		if (!irisConfig.areShadersEnabled(inWorld)) {
 			logger.info("Shaders are disabled because enableShaders is set to false in iris.properties");
 
 			setShadersDisabled();
 
 			return;
 		}
-
 		// Attempt to load an external shaderpack if it is available
 		Optional<String> externalName = irisConfig.getShaderPackName();
 
@@ -251,7 +267,8 @@ public class Iris {
 			shaderPackRoot = getShaderpacksDirectory().resolve(name);
 			shaderPackConfigTxt = getShaderpacksDirectory().resolve(name + ".txt");
 		} catch (InvalidPathException e) {
-			logger.error("Failed to load the shaderpack \"{}\" because it contains invalid characters in its path", name);
+			logger.error("Failed to load the shaderpack \"{}\" because it contains invalid characters in its path",
+					name);
 
 			return false;
 		}
@@ -270,7 +287,9 @@ public class Iris {
 			try {
 				optionalPath = loadExternalZipShaderpack(shaderPackRoot);
 			} catch (FileSystemNotFoundException | NoSuchFileException e) {
-				logger.error("Failed to load the shaderpack \"{}\" because it does not exist in your shaderpacks folder!", name);
+				logger.error(
+						"Failed to load the shaderpack \"{}\" because it does not exist in your shaderpacks folder!",
+						name);
 
 				return false;
 			} catch (ZipException e) {
@@ -287,7 +306,8 @@ public class Iris {
 			if (optionalPath.isPresent()) {
 				shaderPackPath = optionalPath.get();
 			} else {
-				logger.error("Could not load the shaderpack \"{}\" because it appears to lack a \"shaders\" directory", name);
+				logger.error("Could not load the shaderpack \"{}\" because it appears to lack a \"shaders\" directory",
+						name);
 				return false;
 			}
 			isZip = true;
@@ -302,13 +322,14 @@ public class Iris {
 		}
 
 		if (!Files.exists(shaderPackPath)) {
-			logger.error("Could not load the shaderpack \"{}\" because it appears to lack a \"shaders\" directory", name);
+			logger.error("Could not load the shaderpack \"{}\" because it appears to lack a \"shaders\" directory",
+					name);
 			return false;
 		}
 
 		Map<String, String> changedConfigs = tryReadConfigProperties(shaderPackConfigTxt)
-			.map(properties -> (Map<String, String>) (Object) properties)
-			.orElse(new HashMap<>());
+				.map(properties -> (Map<String, String>) (Object) properties)
+				.orElse(new HashMap<>());
 
 		changedConfigs.putAll(shaderPackOptionQueue);
 		clearShaderPackOptionQueue();
@@ -319,13 +340,16 @@ public class Iris {
 		resetShaderPackOptions = false;
 
 		try {
-			currentPack = new ShaderPack(shaderPackPath, changedConfigs, StandardMacros.createStandardEnvironmentDefines(), isZip);
+			currentPack = new ShaderPack(shaderPackPath, changedConfigs,
+					StandardMacros.createStandardEnvironmentDefines(), isZip);
 
-			MutableOptionValues changedConfigsValues = currentPack.getShaderPackOptions().getOptionValues().mutableCopy();
+			MutableOptionValues changedConfigsValues = currentPack.getShaderPackOptions().getOptionValues()
+					.mutableCopy();
 
 			// Store changed values from those currently in use by the shader pack
 			Properties configsToSave = new Properties();
-			changedConfigsValues.getBooleanValues().forEach((k, v) -> configsToSave.setProperty(k, Boolean.toString(v)));
+			changedConfigsValues.getBooleanValues()
+					.forEach((k, v) -> configsToSave.setProperty(k, Boolean.toString(v)));
 			changedConfigsValues.getStringValues().forEach(configsToSave::setProperty);
 
 			tryUpdateConfigPropertiesFile(shaderPackConfigTxt, configsToSave);
@@ -347,11 +371,25 @@ public class Iris {
 
 	private static void handleException(Exception e) {
 		if (lastDimension != null && irisConfig.areDebugOptionsEnabled()) {
-			Minecraft.getInstance().setScreen(new DebugLoadFailedGridScreen(Minecraft.getInstance().screen, Component.literal(e instanceof ShaderCompileException ? "Failed to compile shaders" : "Exception"), e));
+			Minecraft.getInstance()
+					.setScreen(new DebugLoadFailedGridScreen(Minecraft.getInstance().screen,
+							Component.literal(
+									e instanceof ShaderCompileException ? "Failed to compile shaders" : "Exception"),
+							e));
 		} else {
 			if (Minecraft.getInstance().player != null) {
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable(e instanceof ShaderCompileException ? "iris.load.failure.shader" : "iris.load.failure.generic").append(Component.literal("Copy Info").withStyle(arg -> arg.withUnderlined(true).withColor(
-					ChatFormatting.BLUE).withClickEvent(new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, e.getMessage())).withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("chat.copy.click"))))), false);
+				Minecraft.getInstance().player
+						.displayClientMessage(Component
+								.translatable(e instanceof ShaderCompileException ? "iris.load.failure.shader"
+										: "iris.load.failure.generic")
+								.append(Component.literal("Copy Info").withStyle(arg -> arg.withUnderlined(true)
+										.withColor(
+												ChatFormatting.BLUE)
+										.withClickEvent(
+												new ClickEvent(ClickEvent.Action.COPY_TO_CLIPBOARD, e.getMessage()))
+										.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
+												Component.translatable("chat.copy.click"))))),
+								false);
 			} else {
 				storedError = Optional.of(e);
 			}
@@ -368,20 +406,23 @@ public class Iris {
 		Path potentialShaderDir = zipSystem.getPath("shaders");
 
 		// If the shaders dir was immediately found return it
-		// Otherwise, manually search through each directory path until it ends with "shaders"
+		// Otherwise, manually search through each directory path until it ends with
+		// "shaders"
 		if (Files.exists(potentialShaderDir)) {
 			return Optional.of(potentialShaderDir);
 		}
 
-		// Sometimes shaderpacks have their shaders directory within another folder in the shaderpack
+		// Sometimes shaderpacks have their shaders directory within another folder in
+		// the shaderpack
 		// For example Sildurs-Vibrant-Shaders.zip/shaders
-		// While other packs have Trippy-Shaderpack-master.zip/Trippy-Shaderpack-master/shaders
+		// While other packs have
+		// Trippy-Shaderpack-master.zip/Trippy-Shaderpack-master/shaders
 		// This makes it hard to determine what is the actual shaders dir
 		try (Stream<Path> stream = Files.walk(root)) {
 			return stream
-				.filter(Files::isDirectory)
-				.filter(path -> path.endsWith("shaders"))
-				.findFirst();
+					.filter(Files::isDirectory)
+					.filter(path -> path.endsWith("shaders"))
+					.findFirst();
 		}
 	}
 
@@ -411,13 +452,18 @@ public class Iris {
 		logger.info("Debug functionality is " + (enable ? "enabled, logging will be more verbose!" : "disabled."));
 		if (Minecraft.getInstance().player != null) {
 			if (IrisPlatformHelpers.getInstance().useELS()) {
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable("iris.shaders.debug.restartNoDebug"), false);
+				Minecraft.getInstance().player
+						.displayClientMessage(Component.translatable("iris.shaders.debug.restartNoDebug"), false);
 			} else {
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable(success != 0 ? (enable ? "iris.shaders.debug.enabled" : "iris.shaders.debug.disabled") : "iris.shaders.debug.failure"), false);
+				Minecraft.getInstance().player.displayClientMessage(Component.translatable(
+						success != 0 ? (enable ? "iris.shaders.debug.enabled" : "iris.shaders.debug.disabled")
+								: "iris.shaders.debug.failure"),
+						false);
 			}
 
 			if (success == 2 && !IrisPlatformHelpers.getInstance().useELS()) {
-				Minecraft.getInstance().player.displayClientMessage(Component.translatable("iris.shaders.debug.restart"), false);
+				Minecraft.getInstance().player
+						.displayClientMessage(Component.translatable("iris.shaders.debug.restart"), false);
 			}
 		}
 	}
@@ -427,8 +473,9 @@ public class Iris {
 
 		if (Files.exists(path)) {
 			try (InputStream is = Files.newInputStream(path)) {
-				// NB: config properties are specified to be encoded with ISO-8859-1 by OptiFine,
-				//     so we don't need to do the UTF-8 workaround here.
+				// NB: config properties are specified to be encoded with ISO-8859-1 by
+				// OptiFine,
+				// so we don't need to do the UTF-8 workaround here.
 				properties.load(is);
 			} catch (IOException e) {
 				// TODO: Better error handling
@@ -473,11 +520,11 @@ public class Iris {
 			}
 			try (Stream<Path> stream = Files.walk(pack)) {
 				return stream
-					.filter(Files::isDirectory)
-					// Prevent a pack simply named "shaders" from being
-					// identified as a valid pack
-					.filter(path -> !path.equals(pack))
-					.anyMatch(path -> path.endsWith("shaders"));
+						.filter(Files::isDirectory)
+						// Prevent a pack simply named "shaders" from being
+						// identified as a valid pack
+						.filter(path -> !path.equals(pack))
+						.anyMatch(path -> path.endsWith("shaders"));
 			} catch (IOException ignored) {
 				// ignored, not a valid shader pack.
 				return false;
@@ -489,8 +536,8 @@ public class Iris {
 				Path root = zipSystem.getRootDirectories().iterator().next();
 				try (Stream<Path> stream = Files.walk(root)) {
 					return stream
-						.filter(Files::isDirectory)
-						.anyMatch(path -> path.endsWith("shaders"));
+							.filter(Files::isDirectory)
+							.anyMatch(path -> path.endsWith("shaders"));
 				}
 			} catch (ZipError zipError) {
 				// Java 8 seems to throw a ZipError instead of a subclass of IOException
@@ -514,11 +561,12 @@ public class Iris {
 	public static void queueShaderPackOptionsFromProperties(Properties properties) {
 		queueDefaultShaderPackOptionValues();
 
-		properties.stringPropertyNames().forEach(key ->
-			getShaderPackOptionQueue().put(key, properties.getProperty(key)));
+		properties.stringPropertyNames()
+				.forEach(key -> getShaderPackOptionQueue().put(key, properties.getProperty(key)));
 	}
 
-	// Used in favor of resetShaderPackOptions as the aforementioned requires the pack to be reloaded
+	// Used in favor of resetShaderPackOptions as the aforementioned requires the
+	// pack to be reloaded
 	public static void queueDefaultShaderPackOptionValues() {
 		clearShaderPackOptionQueue();
 
@@ -569,7 +617,8 @@ public class Iris {
 	}
 
 	/**
-	 * Destroys and deallocates all created OpenGL resources. Useful as part of a reload.
+	 * Destroys and deallocates all created OpenGL resources. Useful as part of a
+	 * reload.
 	 */
 	private static void destroyEverything() {
 		currentPack = null;
@@ -583,7 +632,8 @@ public class Iris {
 			try {
 				zipFileSystem.close();
 			} catch (NoSuchFileException e) {
-				logger.warn("Failed to close the shaderpack zip when reloading because it was deleted, proceeding anyways.");
+				logger.warn(
+						"Failed to close the shaderpack zip when reloading because it was deleted, proceeding anyways.");
 			} catch (IOException e) {
 				logger.error("Failed to close zip file system?", e);
 			}
@@ -594,10 +644,13 @@ public class Iris {
 		ClientLevel level = Minecraft.getInstance().level;
 
 		if (level != null) {
-			return new NamespacedId(level.dimension().location().getNamespace(), level.dimension().location().getPath());
+			return new NamespacedId(level.dimension().location().getNamespace(),
+					level.dimension().location().getPath());
 		} else {
-			// This prevents us from reloading the shaderpack unless we need to. Otherwise, if the player is in the
-			// nether and quits the game, we might end up reloading the shaders on exit and on entry to the level
+			// This prevents us from reloading the shaderpack unless we need to. Otherwise,
+			// if the player is in the
+			// nether and quits the game, we might end up reloading the shaders on exit and
+			// on entry to the level
 			// because the code thinks that the dimension changed.
 			return lastDimension;
 		}
@@ -611,7 +664,8 @@ public class Iris {
 
 		ProgramSet programs = currentPack.getProgramSet(dimensionId);
 
-		// We use DeferredWorldRenderingPipeline on 1.16, and NewWorldRendering pipeline on 1.17 when rendering shaders.
+		// We use DeferredWorldRenderingPipeline on 1.16, and NewWorldRendering pipeline
+		// on 1.17 when rendering shaders.
 		try {
 			return new IrisRenderingPipeline(programs);
 		} catch (Exception e) {
@@ -619,7 +673,8 @@ public class Iris {
 
 			ShaderStorageBufferHolder.forceDeleteBuffers();
 			logger.error("Failed to create shader rendering pipeline, disabling shaders!", e);
-			// TODO: This should be reverted if a dimension change causes shaders to compile again
+			// TODO: This should be reverted if a dimension change causes shaders to compile
+			// again
 			fallback = true;
 
 			return new VanillaRenderingPipeline();
@@ -689,14 +744,16 @@ public class Iris {
 	}
 
 	/**
-	 * Gets the current release target. Since 1.19.3, Mojang no longer stores this information, so we must manually provide it for snapshots.
+	 * Gets the current release target. Since 1.19.3, Mojang no longer stores this
+	 * information, so we must manually provide it for snapshots.
 	 *
 	 * @return Release target
 	 */
 	public static String getReleaseTarget() {
 		// If this is a snapshot, you must change backupVersionNumber!
 		SharedConstants.tryDetectVersion();
-		return SharedConstants.getCurrentVersion().isStable() ? SharedConstants.getCurrentVersion().getName() : backupVersionNumber;
+		return SharedConstants.getCurrentVersion().isStable() ? SharedConstants.getCurrentVersion().getName()
+				: backupVersionNumber;
 	}
 
 	public static String getBackupVersionNumber() {
@@ -732,23 +789,34 @@ public class Iris {
 	}
 
 	/**
-	 * Called very early on in Minecraft initialization. At this point we *cannot* safely access OpenGL, but we can do
+	 * Called very early on in Minecraft initialization. At this point we *cannot*
+	 * safely access OpenGL, but we can do
 	 * some very basic setup, config loading, and environment checks.
 	 *
-	 * <p>This is roughly equivalent to Fabric Loader's ClientModInitializer#onInitializeClient entrypoint, except
-	 * it's entirely cross platform & we get to decide its exact semantics.</p>
+	 * <p>
+	 * This is roughly equivalent to Fabric Loader's
+	 * ClientModInitializer#onInitializeClient entrypoint, except
+	 * it's entirely cross platform & we get to decide its exact semantics.
+	 * </p>
 	 *
-	 * <p>This is called right before options are loaded, so we can add key bindings here.</p>
+	 * <p>
+	 * This is called right before options are loaded, so we can add key bindings
+	 * here.
+	 * </p>
 	 */
 	public void onEarlyInitialize() {
 		IRIS_VERSION = IrisPlatformHelpers.getInstance().getVersion();
 
 		updateChecker = new UpdateChecker(IRIS_VERSION);
 
-		reloadKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(new KeyMapping("iris.keybind.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "iris.keybinds"));
-		toggleShadersKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(new KeyMapping("iris.keybind.toggleShaders", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "iris.keybinds"));
-		shaderpackScreenKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(new KeyMapping("iris.keybind.shaderPackSelection", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "iris.keybinds"));
-		wireframeKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(new KeyMapping("iris.keybind.wireframe", InputConstants.Type.KEYSYM, InputConstants.UNKNOWN.getValue(), "iris.keybinds"));
+		reloadKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(
+				new KeyMapping("iris.keybind.reload", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_R, "iris.keybinds"));
+		toggleShadersKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(new KeyMapping(
+				"iris.keybind.toggleShaders", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, "iris.keybinds"));
+		shaderpackScreenKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(new KeyMapping(
+				"iris.keybind.shaderPackSelection", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_O, "iris.keybinds"));
+		wireframeKeybind = IrisPlatformHelpers.getInstance().registerKeyBinding(new KeyMapping("iris.keybind.wireframe",
+				InputConstants.Type.KEYSYM, InputConstants.UNKNOWN.getValue(), "iris.keybinds"));
 
 		DHCompat.run();
 
@@ -761,7 +829,8 @@ public class Iris {
 			logger.warn("", e);
 		}
 
-		irisConfig = new IrisConfig(IrisPlatformHelpers.getInstance().getConfigDir().resolve("iris.properties"), IrisPlatformHelpers.getInstance().getConfigDir().resolve("iris-excluded.json"));
+		irisConfig = new IrisConfig(IrisPlatformHelpers.getInstance().getConfigDir().resolve("iris.properties"),
+				IrisPlatformHelpers.getInstance().getConfigDir().resolve("iris-excluded.json"));
 
 		try {
 			irisConfig.initialize();
