@@ -322,13 +322,13 @@ public class IdMap {
 		}
 		Matcher matcher = PropertiesPreprocessor.BACKSLASH_MATCHER.matcher(processedSource);
 		while (matcher.find()) {
-			Iris.logger.warn("Found missing \"\\\" in file \"{}\" in {}: \"{}\"", propertiesFileName, entryName, matcher.group(0));
+			// Iris.logger.warn("Found missing \"\\\" in file \"{}\" in {}: \"{}\"", propertiesFileName, entryName, matcher.group(0));
 			for (int i = 1; i <= matcher.groupCount(); i++) {
 				String match = matcher.group(i);
 				if (match == null) {
 					continue;
 				}
-				Iris.logger.warn("At ID: \"{}\"", match);
+				// Iris.logger.warn("At ID: \"{}\"", match);
 			}
 		}
 	}

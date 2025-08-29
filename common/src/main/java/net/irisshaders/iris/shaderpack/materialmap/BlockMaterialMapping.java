@@ -76,8 +76,8 @@ public class BlockMaterialMapping {
 						Property<?> property = stateManager.getProperty(key);
 
 						if (property == null) {
-							Iris.logger.warn("Error while parsing the block ID map entry for tag \"" + "block." + intId + "\":");
-							Iris.logger.warn("- The block " + block.unwrapKey().get().location() + " has no property with the name " + key + ", ignoring!");
+							// Iris.logger.warn("Error while parsing the block ID map entry for tag \"" + "block." + intId + "\":");
+							// Iris.logger.warn("- The block " + block.unwrapKey().get().location() + " has no property with the name " + key + ", ignoring!");
 
 							return;
 						}
@@ -170,8 +170,8 @@ public class BlockMaterialMapping {
 			Property<?> property = stateManager.getProperty(key);
 
 			if (property == null) {
-				Iris.logger.warn("Error while parsing the block ID map entry for \"" + "block." + intId + "\":");
-				Iris.logger.warn("- The block " + resourceLocation + " has no property with the name " + key + ", ignoring!");
+				// Iris.logger.warn("Error while parsing the block ID map entry for \"" + "block." + intId + "\":");
+				// Iris.logger.warn("- The block " + resourceLocation + " has no property with the name " + key + ", ignoring!");
 
 				return;
 			}

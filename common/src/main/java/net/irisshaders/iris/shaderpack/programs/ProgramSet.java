@@ -268,8 +268,8 @@ public class ProgramSet implements ProgramSetInterface {
 			});
 		}
 
-		packDirectives.getRenderTargetDirectives().getRenderTargetSettings().forEach((index, settings) ->
-			Iris.logger.debug("Render target settings for colortex" + index + ": " + settings));
+		// packDirectives.getRenderTargetDirectives().getRenderTargetSettings().forEach((index, settings) ->
+		// 	Iris.logger.debug("Render target settings for colortex" + index + ": " + settings));
 	}
 
 	public ComputeSource[] getSetup() {
