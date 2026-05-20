@@ -1,28 +1,28 @@
 package net.irisshaders.iris.compat.sodium.mixin;
 
-import net.caffeinemc.mods.sodium.client.gui.SodiumGameOptions;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import net.caffeinemc.mods.sodium.client.gui.VideoSettingsScreen;
 import net.irisshaders.iris.Iris;
+import net.irisshaders.iris.compat.sodium.config.IrisConfig;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.IOException;
-
-/**
- * Ensures that the Iris config file is written whenever Sodium options are changed, in case the user changed the
- * Max Shadow Distance setting.
- */
-@Mixin(SodiumGameOptions.class)
+@Mixin(VideoSettingsScreen.class)
 public class MixinSodiumGameOptions {
-	@Inject(method = "writeToDisk", at = @At("RETURN"), remap = false)
-	private static void iris$writeIrisConfig(CallbackInfo ci) {
-		try {
-			if (Iris.getIrisConfig() != null) {
-				Iris.getIrisConfig().save();
+	@WrapMethod(method = "renderIconWithSpacing", require = 0)
+	private static int iris$makeColor(GuiGraphics graphics, ResourceLocation icon, int color, boolean iconMonochrome, int x, int y, int height, int margin, Operation<Integer> original) {
+		boolean newMonochrome = iconMonochrome;
+		ResourceLocation newIdentifier = icon;
+
+		if (icon.getNamespace().equals("iris")) {
+			if (Iris.getCurrentPack().isPresent()) {
+				newIdentifier = IrisConfig.COLOR;
+				newMonochrome = false;
 			}
-		} catch (IOException e) {
-			Iris.logger.error("Failed to save Iris config file", e);
 		}
+
+		return original.call(graphics, newIdentifier, color, newMonochrome, x, y, height, margin);
 	}
 }

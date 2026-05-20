@@ -1,13 +1,13 @@
 plugins {
     id("idea")
-    id("net.neoforged.moddev") version "2.0.28-beta"
+    id("net.neoforged.moddev") version("2.0.141")
     id("java-library")
 }
 
 val MINECRAFT_VERSION: String by rootProject.extra
 val PARCHMENT_VERSION: String? by rootProject.extra
 val NEOFORGE_VERSION: String by rootProject.extra
-val SODIUM_DEPENDENCY_NEO: Any by rootProject.extra
+val SODIUM_DEPENDENCY_NEO: String by rootProject.extra
 val MOD_VERSION: String by rootProject.extra
 
 base {
@@ -19,6 +19,7 @@ sourceSets {
 
 repositories {
     maven("https://maven.su5ed.dev/releases")
+    maven("https://maven.caffeinemc.net/releases")
     maven("https://maven.neoforged.net/releases/")
 
     exclusiveContent {
@@ -102,7 +103,9 @@ fun includeDep(dependency: String) {
 
 fun includeAdditional(dependency: String) {
     includeDep(dependency)
-    dependencies.additionalRuntimeClasspath(dependency)
+    dependencies {
+        "additionalRuntimeClasspath"(dependency)
+    }
 }
 
 tasks.named("compileTestJava").configure {
@@ -121,7 +124,8 @@ dependencies {
     includeDep("org.sinytra.forgified-fabric-api:fabric-rendering-data-attachment-v1:0.3.48+73761d2e19")
     includeDep("org.sinytra.forgified-fabric-api:fabric-block-view-api-v2:1.0.10+9afaaf8c19")
 
-    implementation(SODIUM_DEPENDENCY_NEO)
+    compileOnly(SODIUM_DEPENDENCY_NEO)
+    compileOnly(SODIUM_DEPENDENCY_NEO.replace("-mod", ""))
     includeAdditional("io.github.douira:glsl-transformer:3.0.0-pre3")
     includeAdditional("org.anarres:jcpp:1.4.14")
 }

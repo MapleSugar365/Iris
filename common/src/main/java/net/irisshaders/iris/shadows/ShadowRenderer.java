@@ -24,7 +24,7 @@ import net.irisshaders.iris.shadows.frustum.BoxCuller;
 import net.irisshaders.iris.shadows.frustum.CullEverythingFrustum;
 import net.irisshaders.iris.shadows.frustum.FrustumHolder;
 import net.irisshaders.iris.shadows.frustum.advanced.AdvancedShadowCullingFrustum;
-import net.irisshaders.iris.shadows.frustum.advanced.ReversedAdvancedShadowCullingFrustum;
+import net.irisshaders.iris.shadows.frustum.advanced.SafeZoneCullingFrustum;
 import net.irisshaders.iris.shadows.frustum.fallback.BoxCullingFrustum;
 import net.irisshaders.iris.shadows.frustum.fallback.NonCullingFrustum;
 import net.irisshaders.iris.uniforms.CameraUniforms;
@@ -58,6 +58,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class ShadowRenderer {
+	public static int RESOLUTION;
 	public static boolean ACTIVE = false;
 	public static List<BlockEntity> visibleBlockEntities;
 	public static int renderDistance;
@@ -331,7 +332,7 @@ public class ShadowRenderer {
 				boxCuller = new BoxCuller(distance);
 			}
 
-			cullingInfo = (isReversed ? "Reversed" : "Advanced") + " Frustum Culling enabled";
+			cullingInfo = (isReversed ? "Safe Zone" : "Advanced") + " Frustum Culling enabled";
 
 			Vector4f shadowLightPosition = new CelestialUniforms(sunPathRotation).getShadowLightPositionInWorldSpace();
 
@@ -344,7 +345,7 @@ public class ShadowRenderer {
 					.mul(CapturedRenderingState.INSTANCE.getGbufferModelView(), new Matrix4f());
 
 			if (isReversed) {
-				return holder.setInfo(new ReversedAdvancedShadowCullingFrustum(projView, PROJECTION, shadowLightVectorFromOrigin, boxCuller, new BoxCuller(halfPlaneLength * renderMultiplier)), distanceInfo, cullingInfo);
+				return holder.setInfo(new SafeZoneCullingFrustum(projView, PROJECTION, shadowLightVectorFromOrigin, boxCuller, new BoxCuller(halfPlaneLength * renderMultiplier)), distanceInfo, cullingInfo);
 			} else {
 				return holder.setInfo(new AdvancedShadowCullingFrustum(projView, PROJECTION, shadowLightVectorFromOrigin, boxCuller), distanceInfo, cullingInfo);
 			}
@@ -362,6 +363,8 @@ public class ShadowRenderer {
 		if (IrisVideoSettings.getOverriddenShadowDistance(IrisVideoSettings.shadowDistance) == 0) {
 			return;
 		}
+
+		RESOLUTION = resolution;
 
 		Minecraft client = Minecraft.getInstance();
 

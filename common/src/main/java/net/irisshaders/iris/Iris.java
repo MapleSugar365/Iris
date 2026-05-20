@@ -757,6 +757,10 @@ public class Iris {
 		loadShaderPackWhenPossible = true;
 	}
 
+	public static String getVersionSimple() {
+		return getVersion().split("\\+")[0];
+	}
+
 	/**
 	 * Called very early on in Minecraft initialization. At this point we *cannot* safely access OpenGL, but we can do
 	 * some very basic setup, config loading, and environment checks.

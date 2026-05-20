@@ -7,15 +7,9 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "BlockRendererAccessor",
-    "CloudRendererAccessor",
     "MixinAbstractBlockRenderContext",
     "MixinBlockRenderer",
-    "MixinBakedChunkModelBuilder",
-    "MixinChunkBuildBuffers",
-    "MixinChunkVertexConsumer",
-    "MixinChunkMeshBufferBuilder",
     "MixinChunkMeshBuildTask",
-    "MixinCloudRenderer",
     "MixinDefaultChunkRenderer",
     "MixinDefaultFluidRenderer",
     "MixinGlRenderDevice",
@@ -23,10 +17,14 @@
     "MixinRenderSectionManager",
     "MixinRenderSectionManagerShadow",
     "MixinShaderChunkRenderer",
-    "MixinSodiumGameOptionPages",
     "MixinSodiumGameOptions",
-    "MixinSodiumOptionsGUI",
-    "MixinSodiumWorldRenderer"
+    "MixinSodiumWorldRenderer",
+    "EnumOptionBuilderImplAccessor",
+    "IntegerOptionBuilderImplAccessor",
+    "MixinChunkVertex",
+    "MixinRenderRegion",
+    "MixinRenderRegionManager",
+    "MixinSodiumOptions"
   ],
   "injectors": {
     "defaultRequire": 1

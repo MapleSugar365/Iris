@@ -50,15 +50,10 @@ config = "mixins.iris.forge.json"
 [[dependencies.iris]]
 modId = "embeddium"
 type = "incompatible"
-reason = "Iris and Embeddium cannot be used together. Please use Sodium 0.6 instead."
+reason = "Iris and Embeddium cannot be used together. Please use Sodium 0.8 instead."
 versionRange = "[0.0.1,)"
 ordering = "NONE"
 side = "CLIENT"
 
-[[dependencies.iris]]
-modId = "sodium"
-type = "required"
-reason = "Iris requires Sodium. Please install Sodium 0.6 for Iris to work."
-versionRange = "[0.6,)"
-ordering = "NONE"
-side = "CLIENT"
+[modproperties.iris]
+"sodium:config_api_user" = "net.irisshaders.iris.compat.sodium.config.IrisConfig"

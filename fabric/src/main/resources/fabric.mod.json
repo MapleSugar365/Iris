@@ -21,6 +21,9 @@
   "entrypoints": {
     "modmenu": [
       "net.irisshaders.iris.compat.modmenu.ModMenuIntegration"
+    ],
+    "sodium:config_api_user": [
+      "net.irisshaders.iris.compat.sodium.config.IrisConfig"
     ]
   },
   "mixins": [
@@ -38,10 +41,10 @@
   "depends": {
     "fabricloader": ">=0.12.3",
     "minecraft": [
-      "1.21.x"
+      "1.21.1"
     ],
     "sodium": [
-      "0.6.x"
+      "0.8.x"
     ]
   },
   "breaks": {

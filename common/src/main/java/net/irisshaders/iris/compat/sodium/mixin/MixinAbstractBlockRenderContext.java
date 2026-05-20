@@ -6,6 +6,7 @@ import net.caffeinemc.mods.sodium.client.render.frapi.render.AbstractBlockRender
 import net.irisshaders.iris.platform.IrisPlatformHelpers;
 import net.irisshaders.iris.shaderpack.materialmap.WorldRenderingSettings;
 import net.irisshaders.iris.vertices.BlockSensitiveBufferBuilder;
+import net.irisshaders.iris.vertices.sodium.terrain.VertexEncoderInterface;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,14 +30,14 @@ public class MixinAbstractBlockRenderContext {
 	private void checkDirectionNeo(BakedModel model, BlockState state, CallbackInfo ci, @Local Direction cullFace) {
 		if ((Object) this instanceof BlockRenderer r && WorldRenderingSettings.INSTANCE.getBlockStateIds() != null && cullFace != null) {
 			BlockState appearance = IrisPlatformHelpers.getInstance().getBlockAppearance(this.level, state, cullFace, this.pos);
-			((BlockSensitiveBufferBuilder) ((BlockRendererAccessor) r).getBuffers()).overrideBlock(WorldRenderingSettings.INSTANCE.getBlockStateIds().getInt(appearance));
+			((VertexEncoderInterface) r).overrideBlock(WorldRenderingSettings.INSTANCE.getBlockStateIds().getInt(appearance));
 		}
 	}
 
 	@Inject(method = "bufferDefaultModel", at = @At(value = "TAIL"))
 	private void checkDirectionNeo(BakedModel model, BlockState state, CallbackInfo ci) {
 		if ((Object) this instanceof BlockRenderer r && WorldRenderingSettings.INSTANCE.getBlockStateIds() != null) {
-			((BlockSensitiveBufferBuilder) ((BlockRendererAccessor) r).getBuffers()).restoreBlock();
+			((VertexEncoderInterface) r).restoreBlock();
 		}
 	}
 }

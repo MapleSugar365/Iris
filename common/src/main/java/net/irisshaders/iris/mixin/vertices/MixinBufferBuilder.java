@@ -184,24 +184,6 @@ public abstract class MixinBufferBuilder implements VertexConsumer, BlockSensiti
 		}
 	}
 
-	@Override
-	public void beginBlock(int block, byte renderType, byte blockEmission, int localPosX, int localPosY, int localPosZ) {
-		this.currentBlock = block;
-		this.currentRenderType = renderType;
-		this.currentLocalPosX = localPosX;
-		this.currentLocalPosY = localPosY;
-		this.currentLocalPosZ = localPosZ;
-	}
-
-	@Override
-	public void endBlock() {
-		this.currentBlock = -1;
-		this.currentRenderType = -1;
-		this.currentLocalPosX = 0;
-		this.currentLocalPosY = 0;
-		this.currentLocalPosZ = 0;
-	}
-
 	@Unique
 	private void fillExtendedData(int vertexAmount) {
 		iris$vertexCount = 0;
