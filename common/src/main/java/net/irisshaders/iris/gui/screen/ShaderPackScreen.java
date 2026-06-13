@@ -1,6 +1,7 @@
 package net.irisshaders.iris.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.irisshaders.iris.gui.GuiUtil;
@@ -371,6 +372,7 @@ public class ShaderPackScreen extends Screen implements HudHideable {
 
 	@Override
 	protected void renderBlurredBackground(float pScreen0) {
+		RenderSystem.disableDepthTest();
 		processFixedBlur(pScreen0);
 		this.minecraft.getMainRenderTarget().bindWrite(false);
 	}

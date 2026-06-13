@@ -6,6 +6,8 @@ plugins {
 }
 
 repositories {
+    maven("https://maven.caffeinemc.net/releases")
+
     maven("https://maven.parchmentmc.org/")
 
     exclusiveContent {

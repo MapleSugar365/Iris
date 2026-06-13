@@ -12,6 +12,8 @@ val SODIUM_DEPENDENCY_FABRIC: Any by rootProject.extra
 val MOD_VERSION: String by rootProject.extra
 
 repositories {
+    maven("https://maven.caffeinemc.net/releases")
+
     exclusiveContent {
         forRepository {
             maven {
