@@ -113,6 +113,12 @@ public class IrisConfig {
 		return enableShaders;
 	}
 
+	public boolean areShadersEnabled(Boolean inWorld) {
+		if (inWorld)
+			return enableShaders;
+		return false;
+	}
+
 	public boolean areDebugOptionsEnabled() {
 		return enableDebugOptions;
 	}

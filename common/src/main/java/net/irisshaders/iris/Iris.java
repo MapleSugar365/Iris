@@ -218,7 +218,8 @@ public class Iris {
 			}
 		}
 
-		if (!irisConfig.areShadersEnabled()) {
+		Boolean inWorld = Minecraft.getInstance().level != null;
+		if (!irisConfig.areShadersEnabled(inWorld)) {
 			logger.info("Shaders are disabled because enableShaders is set to false in iris.properties");
 
 			setShadersDisabled();
